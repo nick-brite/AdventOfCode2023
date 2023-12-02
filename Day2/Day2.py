@@ -64,15 +64,15 @@ def partTwo():
                 elif splitItem[1] == "blue":
                     blueCubesShown += cubeNum
 
-            if (redCubesShown != 0 and redCubesShown > maxRed):
+            if redCubesShown > maxRed:
                 maxRed = redCubesShown
-            if (greenCubesShown != 0 and greenCubesShown > maxGreen):
+            if greenCubesShown > maxGreen:
                 maxGreen = greenCubesShown
-            if (blueCubesShown != 0 and blueCubesShown > maxBlue):
+            if blueCubesShown > maxBlue:
                 maxBlue = blueCubesShown
 
         powerSum += maxRed * maxGreen * maxBlue
-        
+
     print(powerSum)
 
 partTwo()
