@@ -1,7 +1,7 @@
 from functools import reduce
 import matplotlib.pyplot as plt
 
-lines = open('C:/Users/Nick Albright/Projects/AdventOfCode2023/Day5/input.txt', 'r').read().splitlines()
+lines = open('/Users/nickalbright/Projects/AdventOfCode2023/Day8/input.txt', 'r').read().splitlines()
 
 def partOne():
     times = [x for x in lines[0].split(' ') if x.split()][1:]
