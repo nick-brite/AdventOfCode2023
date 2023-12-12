@@ -1,11 +1,12 @@
 import numpy as np
 import math
 
-lines = open('/Users/nickalbright/Projects/AdventOfCode2023/Day10/input.txt', 'r').read().splitlines()
+lines = open('C:/Users/Nick Albright/Projects/AdventOfCode2023/Day10/input.txt', 'r').read().splitlines()
 stepsArr = []
 charMap = []
 startPos = None
 startChar = None
+tubePoints = set()
 
 def partTwo():
     partOne() #sets up data
@@ -19,10 +20,36 @@ def partTwo():
             charArray[i][j] = lines[i][j]
 
     charArray[startPos[0]][startPos[1]] = startChar
-    printMap(charArray)
+    newCharArray = charArray
 
     # now do the thing!
+    insideCount = 0
+    for i, row in enumerate(charArray):
+        wallCount = 0
+        c1 = None
+        for j, c in enumerate(row):
+            if ((i, j) in tubePoints):
+                if c == '|':
+                    wallCount += 1
+                elif c in 'FL':
+                    c1 = c # use this for tracking combined walls
+                elif c == 'J':
+                    if c1 == 'F':
+                        wallCount += 1
+                        c1 = None
+                elif c == '7':
+                    if c1 == 'L':
+                        wallCount += 1
+                    c1 = None
 
+            else:
+                if wallCount % 2 == 1:
+                    newCharArray[i][j] = 'I'
+                    insideCount += 1
+                
+    #printMap(newCharArray)
+    print(insideCount)
+            
 
 
 def printMap(charArray):
@@ -90,14 +117,19 @@ def partOne():
         if 'W' in startDirs:
             startChar = '-'
         elif 'S' in startDirs:
-            startChar = '7'
+            startChar = 'F'
     elif 'S' in startDirs and 'W' in startDirs:
-        startChr = 'F'
+        startChar = '7'
 
+    global tubePoints
+    tubePoints.add(startPos) # For P2
     
     steps = 1
     stepsArr[path1Pos[0]][path1Pos[1]] = steps
     stepsArr[path2Pos[0]][path2Pos[1]] = steps
+    tubePoints.add((path1Pos[0], path1Pos[1]))
+    tubePoints.add((path2Pos[0], path2Pos[1]))
+
 
 
     while path1Pos != path2Pos:
@@ -106,6 +138,8 @@ def partOne():
         path2Pos = getNextPosition(path2Pos, nextDir2)
         stepsArr[path1Pos[0]][path1Pos[1]] = steps
         stepsArr[path2Pos[0]][path2Pos[1]] = steps
+        tubePoints.add((path1Pos[0], path1Pos[1]))
+        tubePoints.add((path2Pos[0], path2Pos[1]))
 
 
         # coding terribly here: - have to switch directions to be from perspective of called node
@@ -132,8 +166,9 @@ def partOne():
 
     if (path1Pos == path2Pos): # furthest point
         stepsArr[path1Pos[0]][path1Pos[1]] = steps
+        tubePoints.add((path1Pos[0], path1Pos[1]))
 
-    #print(steps)
+    print(steps)
 
 
 
