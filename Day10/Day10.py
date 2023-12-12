@@ -3,8 +3,42 @@ import math
 
 lines = open('/Users/nickalbright/Projects/AdventOfCode2023/Day10/input.txt', 'r').read().splitlines()
 stepsArr = []
+charMap = []
+startPos = None
+startChar = None
+
+def partTwo():
+    partOne() #sets up data
+    # create image
+
+    # create 2d char array
+    charArray = np.full((len(lines), len(lines[0])), '.', dtype=np.dtype('U1'))
+
+    for i in range(len(charArray)):
+        for j in range(len(charArray[0])):
+            charArray[i][j] = lines[i][j]
+
+    charArray[startPos[0]][startPos[1]] = startChar
+    printMap(charArray)
+
+    # now do the thing!
+
+
+
+def printMap(charArray):
+    # Specify the file path
+    file_path = "output.txt"
+
+    # Open the file in write mode
+    with open(file_path, "w") as file:
+        # Iterate over each list in the list of lists
+        for innerList in charArray:
+            # Use the print function to write the inner list to the file
+            print(innerList, file=file)
+
 
 def partOne():
+    global startPos
     startPos = (0, 0)
     for i, l in enumerate(lines):
         for j, c in enumerate(l):
@@ -19,9 +53,52 @@ def partOne():
     path1Pos, nextDir1 = checkPositions(startPos, None)
     path2Pos, nextDir2 = checkPositions(startPos, path1Pos)
 
+    # replace S character (more for P2)
+    lineDif1 = path1Pos[0] - startPos[0]
+    colDif1 = path1Pos[1] - startPos[1]
+    lineDif2 = path2Pos[0] - startPos[0]
+    colDif2 = path2Pos[1] - startPos[1]
+
+    startDirs = []
+    if lineDif1 == -1:
+        startDirs.append('N')
+    elif lineDif1 == 1:
+        startDirs.append('S')
+    elif colDif1 == -1:
+        startDirs.append('W')
+    elif colDif1 == 1:
+        startDirs.append('E')
+
+    if lineDif2 == -1:
+        startDirs.append('N')
+    elif lineDif2 == 1:
+        startDirs.append('S')
+    elif colDif2 == -1:
+        startDirs.append('W')
+    elif colDif2 == 1:
+        startDirs.append('E')
+
+    global startChar
+    if 'N' in startDirs:
+        if 'S' in startDirs:
+            startChar = '|'
+        elif 'E' in startDirs:
+            startChar = 'L'
+        elif 'W' in startDirs:
+            startChar = 'J'
+    elif 'E' in startDirs:
+        if 'W' in startDirs:
+            startChar = '-'
+        elif 'S' in startDirs:
+            startChar = '7'
+    elif 'S' in startDirs and 'W' in startDirs:
+        startChr = 'F'
+
+    
     steps = 1
     stepsArr[path1Pos[0]][path1Pos[1]] = steps
     stepsArr[path2Pos[0]][path2Pos[1]] = steps
+
 
     while path1Pos != path2Pos:
         steps += 1
@@ -55,9 +132,8 @@ def partOne():
 
     if (path1Pos == path2Pos): # furthest point
         stepsArr[path1Pos[0]][path1Pos[1]] = steps
-        print(stepsArr)
 
-    print(steps)
+    #print(steps)
 
 
 
@@ -150,4 +226,4 @@ def connects(fromDirection, newLink):
             else:
                 return 'S'
 
-partOne()
+partTwo()
